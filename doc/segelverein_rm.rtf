@@ -1,0 +1,59 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+{\fonttbl\f0\fmodern\fcharset0 Courier-Bold;\f1\fmodern\fcharset0 Courier;\f2\fnil\fcharset0 Verdana;
+}
+{\colortbl;\red255\green255\blue255;\red38\green38\blue38;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\b\fs34 \cf2 \expnd0\expndtw0\kerning0
+RM Segelverein
+\f1\b0 \
+\
+Person(\expnd0\expndtw0\kerning0
+\ul key\expnd0\expndtw0\kerning0
+\ulnone , name, geburtsdatum) \uc0\u8232 Segler(\expnd0\expndtw0\kerning0
+\ul key: Person.key\expnd0\expndtw0\kerning0
+\ulnone ) \uc0\u8232 Trainer(\expnd0\expndtw0\kerning0
+\ul key: Person.key\expnd0\expndtw0\kerning0
+\ulnone ) 
+\f2\fs28 \expnd0\expndtw0\kerning0
+\
+
+\f1\fs34 \expnd0\expndtw0\kerning0
+Boot(\expnd0\expndtw0\kerning0
+\ul id\expnd0\expndtw0\kerning0
+\ulnone , name, personen, tiefgang) \uc0\u8232 Tourenboot(\expnd0\expndtw0\kerning0
+\ul id: Boot.id\expnd0\expndtw0\kerning0
+\ulnone , bootsklasse) \uc0\u8232 Sportboot(\expnd0\expndtw0\kerning0
+\ul id: Boot.id\expnd0\expndtw0\kerning0
+\ulnone , segelflaeche) 
+\f2\fs28 \expnd0\expndtw0\kerning0
+\
+
+\f1\fs34 \expnd0\expndtw0\kerning0
+Mannschaft(\expnd0\expndtw0\kerning0
+\ul name\expnd0\expndtw0\kerning0
+\ulnone , aklasse, key: Trainer.key) 
+\f2\fs28 \expnd0\expndtw0\kerning0
+\
+
+\f1\fs34 \expnd0\expndtw0\kerning0
+Regatta(\expnd0\expndtw0\kerning0
+\ul name, jahr\expnd0\expndtw0\kerning0
+\ulnone , land) \uc0\u8232 Wettfahrt(\expnd0\expndtw0\kerning0
+\ul name: Regatta.name, jahr: Regatta.jahr, datum\expnd0\expndtw0\kerning0
+\ulnone , laenge) 
+\f2\fs28 \expnd0\expndtw0\kerning0
+\
+
+\f1\fs34 \expnd0\expndtw0\kerning0
+bildet(\expnd0\expndtw0\kerning0
+\ul key: Segler.key, name: Mannschaft.name\expnd0\expndtw0\kerning0
+\ulnone ) \uc0\u8232 zugewiesen(\expnd0\expndtw0\kerning0
+\ul id: Boot.id, name: Mannschaft.name\expnd0\expndtw0\kerning0
+\ulnone ) \uc0\u8232 nimmt_teil(\expnd0\expndtw0\kerning0
+\ul mname: Mannschaft.name, rname: Regatta.name, rjahr: Regatta.jahr, sportboot: Sportboot.id\expnd0\expndtw0\kerning0
+\ulnone , startnr) \uc0\u8232 erzielt(\expnd0\expndtw0\kerning0
+\ul mname: Mannschaft.name, wname: Wettfahrt.name, wjahr: Wettfahrt.jahr, wdatum: Wettfahrt.datum\expnd0\expndtw0\kerning0
+\ulnone , punkte)}
