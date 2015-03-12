@@ -72,14 +72,14 @@ public class JDBC_Controller_PSQL {
 	 * Gibt die Connection zurück
 	 * @return conenection
 	 */
-	public Connection getCon() {
+	public Connection getConnection() {
 		return con;
 	}
 	/**
 	 * Gibt das Statement zurück
 	 * @return statement
 	 */
-	public Statement getSt() {
+	public Statement getStatement() {
 		return st;
 	}
 }
