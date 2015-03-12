@@ -1,6 +1,6 @@
 -- Create Skript zum Erstellen der Tabellen für die Datenbank: segelverein
 -- Autor: Lukas Zainzinger
--- Version: 2015-03-09
+-- Version: 2015-03-12
 
 CREATE TABLE person (
   key int PRIMARY KEY NOT NULL,
@@ -34,10 +34,9 @@ CREATE TABLE sportboot (
 );
 
 CREATE TABLE mannschaft (
-  name varchar(255)  NOT NULL,	
+  name varchar(255)  PRIMARY KEY NOT NULL,	
   key int  REFERENCES trainer(key),
-  aklasse int NOT NULL,
-  PRIMARY KEY (name, key)
+  aklasse int NOT NULL
 );
 
 CREATE TABLE regatta (
@@ -58,28 +57,32 @@ CREATE TABLE wettfahrt (
 
 CREATE TABLE bildet (
   bkey int REFERENCES segler(key),
-  bname int REFERENCES mannschaft(name), --GEHT NICHT :(
+  bname varchar(255) REFERENCES mannschaft(name), 
   PRIMARY KEY (bkey, bname)
 );
 
 CREATE TABLE zugewiesen (
   id int REFERENCES boot(id),
-  zname int REFERENCES mannschaft(name), --Geht AUCH nicht :((
+  zname varchar(255) REFERENCES mannschaft(name), 
   PRIMARY KEY(id, zname)
 );
 
 CREATE TABLE nimmtteil (
-  mname int PRIMARY KEY REFERENCES mannschaft(name), --Geht NICHT
-  rname int PRIMARY KEY REFERENCES regatta(name),
-  rjahr varchar(255) PRIMARY KEY REFERENCES regatta(jahr),
-  sportboot int PRIMARY KEY REFERENCES sportboot(id),
-  startnr int
+  mname varchar(255) REFERENCES mannschaft(name), 
+  rname varchar(255),
+  rjahr varchar(255),
+  sportboot int REFERENCES sportboot(id),
+  startnr int,
+  FOREIGN KEY (rname, rjahr) REFERENCES regatta(name, jahr),
+  PRIMARY KEY(mname, rname, rjahr, sportboot)
 );
 
 CREATE TABLE erzielt (
-  emname int PRIMARY KEY REFERENCES mannschaft(name), --Geht NICHT
-  ewname int PRIMARY KEY REFERENCES wettfahrt(wname),
-  ewjahr varchar(255) PRIMARY KEY REFERENCES regatta(jahr),
-  wdatum date PRIMARY KEY REFERENCES wettfahrt(datum),
-  punkte int
+  emname varchar(255) REFERENCES mannschaft(name),
+  ewname varchar(255),
+  ewjahr varchar(255),
+  wdatum date,
+  punkte int,
+  FOREIGN KEY(ewname, wdatum, ewjahr) REFERENCES wettfahrt(wname, datum, wjahr),
+  PRIMARY KEY(emname, ewname, ewjahr, wdatum)
 );
