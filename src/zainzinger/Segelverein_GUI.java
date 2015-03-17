@@ -10,7 +10,11 @@ import javax.swing.JTable;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
+/**
+ * GUI für das Verwalten der Boote
+ * @author lukaszainzinger
+ * @version 2015-03-16
+ */
 public class Segelverein_GUI {
 
 	private JFrame frame;

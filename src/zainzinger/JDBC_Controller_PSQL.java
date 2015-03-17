@@ -9,7 +9,7 @@ import org.postgresql.ds.PGPoolingDataSource;
 
 /**
  * @author lukaszainzinger
- *
+ * @version 2015-03-15
  */
 public class JDBC_Controller_PSQL {	
 	private String name;
@@ -42,6 +42,7 @@ public class JDBC_Controller_PSQL {
 		ds.setDatabaseName(datenbank);
 		
 		con = ds.getConnection();
+		con.setAutoCommit(false);
 		st = con.createStatement();
 	}
 	/**
@@ -53,6 +54,32 @@ public class JDBC_Controller_PSQL {
 	public ResultSet executeQuery(String query) throws SQLException {
 		return st.executeQuery(query);
 	}
+	
+	/**
+	 * INSERT Methode
+	 * @return Anzahl der betroffenen Rows
+	 * @param tabname Name der Tabelle
+	 * @param param Die Parameter der Tabelle, Komma getrennt
+	 * @param values Die einzutragenden Werte, Komma getrennt
+	 * @throws SQLException 
+	 */
+	public void insert(String tabname, String param, String values) throws SQLException{
+		String sql = "INSERT INTO " + tabname + " (" + param +") VALUES (" + values +");";
+		st.executeUpdate(sql);
+		con.commit();
+	}
+	
+	/**
+	 * Erstellt aus einem ResultSet ein 2 Dimensionales Object Array (für JTables)
+	 * @param rs ResultSet
+	 * @return Object[][]
+	 */
+	public Object[][] forJTable(ResultSet rs){
+		Object[][] data = {{}};
+
+		return data;
+	}
+	
 	/**
 	 * Schließt alle Connections
 	 */
@@ -63,6 +90,7 @@ public class JDBC_Controller_PSQL {
 			System.err.println(e.getMessage());
 		}
 		try {
+			con.commit();
 			con.close();
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
