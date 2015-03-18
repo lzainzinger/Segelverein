@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JTextField;
@@ -30,13 +31,23 @@ public class Segelverein_GUI {
 	private JTextField txtName;
 	private JTextField txtPersonen;
 	private JTextField txtTiefgang;
-	JDBC_Controller_PSQL con;
+	private JDBC_Controller_PSQL con;
+	private Object[][] tabelle;
+	private Object[] colnames = {"id", "name", "personen", "tiefgang"};
 
 	/**
 	 * Create the application.
 	 */
 	public Segelverein_GUI(JDBC_Controller_PSQL con) {
 		this.con = con;
+		ResultSet rs;
+		try {
+			rs = con.executeQuery("SELECT * FROM boot;");
+			this.tabelle = con.forJTable(rs, 4);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initialize();
 	}
 
@@ -87,7 +98,7 @@ public class Segelverein_GUI {
 		JPanel anzeige_panel = new JPanel();
 		getFrame().getContentPane().add(anzeige_panel, BorderLayout.CENTER);
 		
-		boot_table = new JTable();
+		boot_table = new JTable(tabelle, colnames);
 		anzeige_panel.add(boot_table);
 		
 		

@@ -44,7 +44,7 @@ public class JDBC_Controller_PSQL {
 		
 		con = ds.getConnection();
 		con.setAutoCommit(false);
-		st = con.createStatement();
+		st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 	}
 	/**
 	 * Query
@@ -104,9 +104,20 @@ public class JDBC_Controller_PSQL {
 	 * Erstellt aus einem ResultSet ein 2 Dimensionales Object Array (für JTables)
 	 * @param rs ResultSet
 	 * @return Object[][]
+	 * @throws SQLException 
 	 */
-	public Object[][] forJTable(ResultSet rs){
-		Object[][] data = {{}};
+	public Object[][] forJTable(ResultSet rs, int params) throws SQLException{
+		int j = 0;
+		while(rs.next()) {
+		    j++;
+		}
+		rs.beforeFirst();
+		Object[][] data = new Object[j][params];
+		while(rs.next()){
+			for(int i = 0; i < params; i++){
+				data[rs.getRow()-1][i] = rs.getObject(i+1);
+			}
+		}
 
 		return data;
 	}
