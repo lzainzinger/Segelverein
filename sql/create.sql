@@ -5,7 +5,7 @@
 CREATE TABLE person (
   key int PRIMARY KEY NOT NULL,
   name varchar(255) NOT NULL,
-  geburtsdatum varchar(255)
+  geburtsdatum DATE
 );
 
 CREATE TABLE segler (
@@ -41,14 +41,14 @@ CREATE TABLE mannschaft (
 
 CREATE TABLE regatta (
   name varchar(255) NOT NULL,
-  jahr varchar(255) NOT NULL,
+  jahr varchar(4) NOT NULL,
   land varchar(100) NOT NULL,
   PRIMARY KEY (name, jahr)
 );
 
 CREATE TABLE wettfahrt (
   wname varchar(255),
-  wjahr varchar(255),
+  wjahr varchar(4),
   datum date NOT NULL,
   laenge int NOT NULL,
   FOREIGN KEY (wname, wjahr) REFERENCES regatta(name, jahr),
@@ -70,7 +70,7 @@ CREATE TABLE zugewiesen (
 CREATE TABLE nimmtteil (
   mname varchar(255) REFERENCES mannschaft(name), 
   rname varchar(255),
-  rjahr varchar(255),
+  rjahr varchar(4),
   sportboot int REFERENCES sportboot(id),
   startnr int,
   FOREIGN KEY (rname, rjahr) REFERENCES regatta(name, jahr),
@@ -80,7 +80,7 @@ CREATE TABLE nimmtteil (
 CREATE TABLE erzielt (
   emname varchar(255) REFERENCES mannschaft(name),
   ewname varchar(255),
-  ewjahr varchar(255),
+  ewjahr varchar(4),
   wdatum date,
   punkte int,
   FOREIGN KEY(ewname, wdatum, ewjahr) REFERENCES wettfahrt(wname, datum, wjahr),

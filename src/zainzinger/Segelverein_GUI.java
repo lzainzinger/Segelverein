@@ -4,46 +4,39 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
 import javax.swing.JTable;
+
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 /**
  * GUI für das Verwalten der Boote
  * @author lukaszainzinger
- * @version 2015-03-16
+ * @version 2015-03-18
  */
 public class Segelverein_GUI {
 
 	private JFrame frame;
 	private JTable boot_table;
-	private JTextField textField_id;
-	private JTextField textField_name;
-	private JTextField textField_personen;
-	private JTextField textField_tiefgang;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Segelverein_GUI window = new Segelverein_GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextField txtId;
+	private JTextField txtName;
+	private JTextField txtPersonen;
+	private JTextField txtTiefgang;
+	JDBC_Controller_PSQL con;
 
 	/**
 	 * Create the application.
 	 */
-	public Segelverein_GUI() {
+	public Segelverein_GUI(JDBC_Controller_PSQL con) {
+		this.con = con;
 		initialize();
 	}
 
@@ -51,32 +44,33 @@ public class Segelverein_GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JToolBar toolBar = new JToolBar();
-		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		setFrame(new JFrame());
+		getFrame().setBounds(100, 100, 450, 300);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel button_panel = new JPanel();
-		frame.getContentPane().add(button_panel, BorderLayout.SOUTH);
+		getFrame().getContentPane().add(button_panel, BorderLayout.SOUTH);
 		button_panel.setLayout(new GridLayout(2, 4, 0, 0));
 		
-		textField_id = new JTextField();
-		button_panel.add(textField_id);
-		textField_id.setColumns(10);
+		txtId = new JTextField();
+		txtId.setText("ID");
+		button_panel.add(txtId);
+		txtId.setColumns(10);
 		
-		textField_name = new JTextField();
-		button_panel.add(textField_name);
-		textField_name.setColumns(10);
+		txtName = new JTextField();
+		txtName.setText("NAME");
+		button_panel.add(txtName);
+		txtName.setColumns(10);
 		
-		textField_personen = new JTextField();
-		button_panel.add(textField_personen);
-		textField_personen.setColumns(10);
+		txtPersonen = new JTextField();
+		txtPersonen.setText("PERSONEN ");
+		button_panel.add(txtPersonen);
+		txtPersonen.setColumns(10);
 		
-		textField_tiefgang = new JTextField();
-		button_panel.add(textField_tiefgang);
-		textField_tiefgang.setColumns(10);
+		txtTiefgang = new JTextField();
+		txtTiefgang.setText("TIEFGANG");
+		button_panel.add(txtTiefgang);
+		txtTiefgang.setColumns(10);
 		
 		JButton button_create = new JButton("Eintragen");
 		button_panel.add(button_create);
@@ -91,10 +85,87 @@ public class Segelverein_GUI {
 		button_panel.add(button_delete);
 		
 		JPanel anzeige_panel = new JPanel();
-		frame.getContentPane().add(anzeige_panel, BorderLayout.CENTER);
+		getFrame().getContentPane().add(anzeige_panel, BorderLayout.CENTER);
 		
 		boot_table = new JTable();
 		anzeige_panel.add(boot_table);
+		
+		
+		//ActionListener CREATE
+		button_create.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(txtId.getText() != "ID" && txtName.getText() != "NAME" && txtPersonen.getText() != "PERSONEN" && txtTiefgang.getText() != "TIEFGANG"){
+					try {
+						con.insert("boot","id, name, personen, tiefgang", txtId.getText() + ", '"+ txtName.getText() + "', " + txtPersonen.getText() + ", " +  txtTiefgang.getText()+"");
+					} catch (SQLException e1) {
+						System.err.println("Bitte alle Textfelder RICHTIG befüllen!");
+						e1.printStackTrace();
+					}
+				}else{
+					System.err.println("Bitte alle Textfelder befüllen!");
+				}	
+			}
+		});
+		
+		//ActionListener DELETE
+		button_delete.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(txtId.getText() != "ID" || txtName.getText() != "NAME" || txtPersonen.getText() != "PERSONEN" || txtTiefgang.getText() != "TIEFGANG"){
+					try {
+						if(txtId.getText() != "ID" && txtId.getText() != ""){
+							con.delete("boot","id", txtId.getText());
+						}else if(txtName.getText() != "NAME" && txtName.getText() != ""){
+							con.delete("boot","name", txtName.getText());
+						}else if(txtPersonen.getText() != "PERSONEN" && txtPersonen.getText() != ""){
+							con.delete("boot","personen", txtPersonen.getText());
+						}else{
+							con.delete("boot", "tiefgang", txtTiefgang.getText());
+						}
+					} catch (SQLException e1) {
+						System.err.println("Bitte alle Textfelder RICHTIG befüllen!");
+						e1.printStackTrace();
+					}
+				}else{
+					System.err.println("Bitte ein Feld ausfüllen um einen Eintrag zu Löschen!");
+				}	
+			}
+		});
+		
+		//ActionListener UPDATE
+		button_update.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(txtId.getText() != "ID" && txtId.getText() != ""){
+					try {
+						if(txtName.getText() != "NAME" && txtName.getText() != ""){
+							con.update("boot","name", "'" + txtName.getText() + "'", "id", txtId.getText());
+						}
+						if(txtPersonen.getText() != "PERSONEN" && txtPersonen.getText() != ""){
+							con.update("boot","personen", txtPersonen.getText(), "id", txtId.getText());
+						}
+						if(txtTiefgang.getText() != "TIEFGANG" && txtTiefgang.getText() != ""){
+							con.update("boot", "tiefgang", txtTiefgang.getText(), "id", txtId.getText());
+						}
+					} catch (SQLException e1) {
+						System.err.println("Bitte alle Textfelder RICHTIG befüllen!");
+						e1.printStackTrace();
+					}
+				}else{
+					System.err.println("Bitte ID angeben um UPDATE durchzuführen!");
+				}	
+			}
+		});
+		
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 
 }

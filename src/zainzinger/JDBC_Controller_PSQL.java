@@ -4,12 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import org.postgresql.ds.PGPoolingDataSource;
 
 
 /**
  * @author lukaszainzinger
- * @version 2015-03-15
+ * @version 2015-03-18
  */
 public class JDBC_Controller_PSQL {	
 	private String name;
@@ -57,7 +58,6 @@ public class JDBC_Controller_PSQL {
 	
 	/**
 	 * INSERT Methode
-	 * @return Anzahl der betroffenen Rows
 	 * @param tabname Name der Tabelle
 	 * @param param Die Parameter der Tabelle, Komma getrennt
 	 * @param values Die einzutragenden Werte, Komma getrennt
@@ -65,6 +65,37 @@ public class JDBC_Controller_PSQL {
 	 */
 	public void insert(String tabname, String param, String values) throws SQLException{
 		String sql = "INSERT INTO " + tabname + " (" + param +") VALUES (" + values +");";
+		System.out.println(sql);
+		st.executeUpdate(sql);
+		con.commit();
+	}
+	
+	/**
+	 * DELETE Methode
+	 * @param tabname Name der Tabelle
+	 * @param param Die Parameter der Tabelle nach der Verglichen wird (WHERE param)
+	 * @param values Der benötigte Wert, (= values)
+	 * @throws SQLException 
+	 */
+	public void delete(String tabname, String param, String values) throws SQLException{
+		String sql = "DELETE FROM " + tabname + " WHERE " + param +" = " + values +";";
+		System.out.println(sql);
+		st.executeUpdate(sql);
+		con.commit();
+	}
+	
+	/**
+	 * UPDATE Methode
+	 * @param tabname Name der Tabelle
+	 * @param param Die Parameter der Tabelle nach der Verglichen wird (WHERE param)
+	 * @param values Der benötigte Wert, (= values)
+	 * @param id Identification by
+	 * @param expr Expression to Identify 
+	 * @throws SQLException 
+	 */
+	public void update(String tabname, String param, String values, String id, String expr) throws SQLException{
+		String sql = "UPDATE " + tabname + " SET " + param +" = " + values +" WHERE " + id + " = " + expr + " ;";
+		System.out.println(sql);
 		st.executeUpdate(sql);
 		con.commit();
 	}
@@ -110,5 +141,6 @@ public class JDBC_Controller_PSQL {
 	public Statement getStatement() {
 		return st;
 	}
+
 }
 

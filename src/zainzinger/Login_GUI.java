@@ -12,12 +12,13 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 /**
  * GUI für den Login
  * @author lukaszainzinger
- * @version 2015-03-17
+ * @version 2015-03-18
  */
 public class Login_GUI {
 
@@ -27,11 +28,12 @@ public class Login_GUI {
 	private JTextField txtPasswort;
 	private JTextField txtServer;
 	private JDBC_Controller_PSQL con;
-	private Segelverein_GUI segelGUI_Boot;
+	private Segelverein_GUI segelGUI_Boot; 
 
 	/**
 	 * Launch the application.
 	 */
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -88,7 +90,7 @@ public class Login_GUI {
 		JLabel lblPasswort = new JLabel("Passwort:");
 		panel.add(lblPasswort);
 		
-		txtPasswort = new JTextField();
+		txtPasswort = new JPasswordField();
 		panel.add(txtPasswort);
 		txtPasswort.setColumns(10);
 		
@@ -118,8 +120,8 @@ public class Login_GUI {
 				}
 				if(error==0){
 					frame.hide();
-					segelGUI_Boot = new Segelverein_GUI();
-					
+					segelGUI_Boot = new Segelverein_GUI(con);
+					segelGUI_Boot.getFrame().setVisible(true);
 				}
 				
 			} });
