@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
@@ -41,7 +42,7 @@ public class Segelverein_GUI {
 	private JRadioButton rdbtnSportboot;
 	private JRadioButton rdbtnTourenboot;
 	private JTextField txtBootsklasse;
-	private JTextField txtSegelflaeche;
+	private JTextField txtSegelflaeche, txtMName, txtMKey, txtMAKlasse, txtWName, txtWJahr, txtWDatum, txtWLaenge;
 	private DefaultTableModel model;
 
 	/**
@@ -68,6 +69,8 @@ public class Segelverein_GUI {
 		setFrame(new JFrame());
 		getFrame().setBounds(100, 100, 450, 300);
 		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JTabbedPane tabpane = new JTabbedPane();
 		
 		JPanel button_panel = new JPanel();
 		getFrame().getContentPane().add(button_panel, BorderLayout.SOUTH);
@@ -126,7 +129,62 @@ public class Segelverein_GUI {
 		boot_table = new JTable(tabelle, colnames);
 		final JScrollPane anzeige_panel = new JScrollPane(boot_table);
 		boot_table.setFillsViewportHeight(true);
-		getFrame().getContentPane().add(anzeige_panel, BorderLayout.CENTER);
+		
+		JPanel jp2 = new JPanel(new GridLayout(10,1));
+		JLabel lman = new JLabel("Mannschaft:");
+		txtMName = new JTextField("MannschaftsName");
+		txtMKey = new JTextField("TrainerKey");
+		txtMAKlasse = new JTextField("AltersKlasse");
+		JLabel lwettfahrt = new JLabel("Wettfahrt:");
+		txtWName = new JTextField("WettfahrtName");
+		txtWJahr = new JTextField("WettfahrtJahr");
+		txtWDatum = new JTextField("WettfahrtDatum");
+		txtWLaenge = new JTextField("WettfahrtLänge");
+		JButton btnEintragen = new JButton("Eintragen");
+		
+		jp2.add(lman);
+		jp2.add(txtMName);
+		jp2.add(txtMKey);
+		jp2.add(txtMAKlasse);
+		jp2.add(lwettfahrt);
+		jp2.add(txtWName);
+		jp2.add(txtWJahr);
+		jp2.add(txtWDatum);
+		jp2.add(txtWLaenge);
+		jp2.add(btnEintragen);
+		
+		btnEintragen.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(txtMName.getText() != "MannschaftsName" && txtMKey.getText() != "TrainerKey" && txtMAKlasse.getText() != "AltersKlasse" ){
+					try {
+						con.insert("mannschaft", "name, key, aklasse", "'" + txtMName.getText() + "', " + txtMKey.getText() + ", " + txtMAKlasse.getText() );
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				if(txtWName.getText() !="WettfahrtName" && txtWJahr.getText() != "WettfahrtJahr" && txtWDatum.getText() != "WettfahrtDatum" && txtWLaenge.getText() != "WettfahrtLänge"){
+					try {
+						con.insert("wettfahrt", "wname, wjahr, datum, laenge", "'"+ txtWName.getText() + "', '" + txtWJahr.getText() + "', " + txtWDatum.getText() + ", " + txtWLaenge.getText() );
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+			}
+			
+		});
+		
+		JPanel jp1 = new JPanel(new GridLayout(2,1));
+		jp1.add(anzeige_panel);
+		jp1.add(button_panel);
+		
+		tabpane.addTab("Boot", jp1);
+		tabpane.addTab("Wettfahrt/Mannschaft", jp2);
+		getFrame().getContentPane().add(tabpane, BorderLayout.CENTER);
 		
 		
 		//ActionListener CREATE

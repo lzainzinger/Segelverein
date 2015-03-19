@@ -9,6 +9,7 @@ import org.postgresql.ds.PGPoolingDataSource;
 
 
 /**
+ * Klasse für die JDBC Verbindung zu einem PostgreSQL Server
  * @author lukaszainzinger
  * @version 2015-03-19
  */
