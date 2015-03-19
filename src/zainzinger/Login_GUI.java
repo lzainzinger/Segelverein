@@ -76,28 +76,28 @@ public class Login_GUI {
 		JLabel lblDatabase = new JLabel("Database:");
 		panel.add(lblDatabase);
 		
-		txt_db = new JTextField();
+		txt_db = new JTextField("segelverein");
 		panel.add(txt_db);
 		txt_db.setColumns(10);
 		
 		JLabel lblUser = new JLabel("User:");
 		panel.add(lblUser);
 		
-		txtUser = new JTextField();
+		txtUser = new JTextField("postgres");
 		panel.add(txtUser);
 		txtUser.setColumns(10);
 		
 		JLabel lblPasswort = new JLabel("Passwort:");
 		panel.add(lblPasswort);
 		
-		txtPasswort = new JPasswordField();
+		txtPasswort = new JPasswordField("postgres");
 		panel.add(txtPasswort);
 		txtPasswort.setColumns(10);
 		
 		JLabel lblServer = new JLabel("Server:");
 		panel.add(lblServer);
 		
-		txtServer = new JTextField();
+		txtServer = new JTextField("localhost");
 		panel.add(txtServer);
 		txtServer.setColumns(10);
 		

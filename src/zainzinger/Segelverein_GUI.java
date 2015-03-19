@@ -3,6 +3,7 @@ package zainzinger;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import java.awt.BorderLayout;
@@ -18,10 +19,13 @@ import java.sql.SQLException;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableModel;
 /**
  * GUI für das Verwalten der Boote
  * @author lukaszainzinger
- * @version 2015-03-18
+ * @version 2015-03-19
  */
 public class Segelverein_GUI {
 
@@ -34,6 +38,11 @@ public class Segelverein_GUI {
 	private JDBC_Controller_PSQL con;
 	private Object[][] tabelle;
 	private Object[] colnames = {"id", "name", "personen", "tiefgang"};
+	private JRadioButton rdbtnSportboot;
+	private JRadioButton rdbtnTourenboot;
+	private JTextField txtBootsklasse;
+	private JTextField txtSegelflaeche;
+	private DefaultTableModel model;
 
 	/**
 	 * Create the application.
@@ -44,6 +53,7 @@ public class Segelverein_GUI {
 		try {
 			rs = con.executeQuery("SELECT * FROM boot;");
 			this.tabelle = con.forJTable(rs, 4);
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,7 +71,7 @@ public class Segelverein_GUI {
 		
 		JPanel button_panel = new JPanel();
 		getFrame().getContentPane().add(button_panel, BorderLayout.SOUTH);
-		button_panel.setLayout(new GridLayout(2, 4, 0, 0));
+		button_panel.setLayout(new GridLayout(3, 4, 0, 0));
 		
 		txtId = new JTextField();
 		txtId.setText("ID");
@@ -83,6 +93,22 @@ public class Segelverein_GUI {
 		button_panel.add(txtTiefgang);
 		txtTiefgang.setColumns(10);
 		
+		rdbtnTourenboot = new JRadioButton("Tourenboot");
+		button_panel.add(rdbtnTourenboot);
+		
+		txtBootsklasse = new JTextField();
+		txtBootsklasse.setText("BOOTSKLASSE");
+		button_panel.add(txtBootsklasse);
+		txtBootsklasse.setColumns(10);
+		
+		rdbtnSportboot = new JRadioButton("Sportboot");
+		button_panel.add(rdbtnSportboot);
+		
+		txtSegelflaeche = new JTextField();
+		txtSegelflaeche.setText("SEGELFLAECHE");
+		button_panel.add(txtSegelflaeche);
+		txtSegelflaeche.setColumns(10);
+		
 		JButton button_create = new JButton("Eintragen");
 		button_panel.add(button_create);
 		
@@ -95,11 +121,12 @@ public class Segelverein_GUI {
 		JButton button_delete = new JButton("Löschen");
 		button_panel.add(button_delete);
 		
-		JPanel anzeige_panel = new JPanel();
-		getFrame().getContentPane().add(anzeige_panel, BorderLayout.CENTER);
+		model = new DefaultTableModel(tabelle, colnames);
 		
 		boot_table = new JTable(tabelle, colnames);
-		anzeige_panel.add(boot_table);
+		final JScrollPane anzeige_panel = new JScrollPane(boot_table);
+		boot_table.setFillsViewportHeight(true);
+		getFrame().getContentPane().add(anzeige_panel, BorderLayout.CENTER);
 		
 		
 		//ActionListener CREATE
@@ -109,13 +136,18 @@ public class Segelverein_GUI {
 				if(txtId.getText() != "ID" && txtName.getText() != "NAME" && txtPersonen.getText() != "PERSONEN" && txtTiefgang.getText() != "TIEFGANG"){
 					try {
 						con.insert("boot","id, name, personen, tiefgang", txtId.getText() + ", '"+ txtName.getText() + "', " + txtPersonen.getText() + ", " +  txtTiefgang.getText()+"");
+						if(rdbtnSportboot.isSelected() && txtSegelflaeche.getText() != "SAEGELFLAECHE"){
+							con.insert("sportboot","id, segelflaeche", "" + txtId.getText()+ ", " + txtSegelflaeche.getText());
+						}else if(rdbtnTourenboot.isSelected() && txtBootsklasse.getText() != "BOOTSKLASSE"){
+							con.insert("tourenboot","id, bootsklasse","" + txtId.getText() + ", '" + txtBootsklasse.getText() +"'");
+						}
 					} catch (SQLException e1) {
 						System.err.println("Bitte alle Textfelder RICHTIG befüllen!");
 						e1.printStackTrace();
 					}
 				}else{
 					System.err.println("Bitte alle Textfelder befüllen!");
-				}	
+				}
 			}
 		});
 		
@@ -123,16 +155,24 @@ public class Segelverein_GUI {
 		button_delete.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(txtId.getText() != "ID" || txtName.getText() != "NAME" || txtPersonen.getText() != "PERSONEN" || txtTiefgang.getText() != "TIEFGANG"){
+				if(txtId.getText() != "ID"){
 					try {
+						ResultSet rs1 = con.executeQuery("SELECT id FROM sportboot;");
+						while(rs1.next()){
+							int x = rs1.getInt(1);
+							if(x == Integer.parseInt(txtId.getText())){
+								con.delete("sportboot", "id", txtId.getText());
+							}
+						}
+						ResultSet rs2 = con.executeQuery("SELECT id FROM tourenboot;");
+						while(rs2.next()){
+							int x1 = rs2.getInt(1);
+							if(x1 == Integer.parseInt(txtId.getText())){
+								con.delete("tourenboot", "id", txtId.getText());
+							}
+						}
 						if(txtId.getText() != "ID" && txtId.getText() != ""){
 							con.delete("boot","id", txtId.getText());
-						}else if(txtName.getText() != "NAME" && txtName.getText() != ""){
-							con.delete("boot","name", txtName.getText());
-						}else if(txtPersonen.getText() != "PERSONEN" && txtPersonen.getText() != ""){
-							con.delete("boot","personen", txtPersonen.getText());
-						}else{
-							con.delete("boot", "tiefgang", txtTiefgang.getText());
 						}
 					} catch (SQLException e1) {
 						System.err.println("Bitte alle Textfelder RICHTIG befüllen!");
@@ -168,6 +208,25 @@ public class Segelverein_GUI {
 				}	
 			}
 		});
+	
+		//ActionListener REFRESH
+				button_refresh.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						try {
+							ResultSet rs = con.executeQuery("SELECT * FROM boot;");
+							tabelle = con.forJTable(rs, 4);
+							rs.close();
+							//model.fireTableDataChanged();
+							boot_table.repaint();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					
+				});
 		
 	}
 

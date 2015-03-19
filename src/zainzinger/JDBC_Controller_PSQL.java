@@ -10,7 +10,7 @@ import org.postgresql.ds.PGPoolingDataSource;
 
 /**
  * @author lukaszainzinger
- * @version 2015-03-18
+ * @version 2015-03-19
  */
 public class JDBC_Controller_PSQL {	
 	private String name;
