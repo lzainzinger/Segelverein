@@ -1,26 +1,30 @@
 -- Create Skript zum Erstellen der Tabellen für die Datenbank: segelverein
 -- Autor: Lukas Zainzinger
 -- Version: 2015-03-12
+-- df namen: word=givennames.list
+-- df bootnamen: word=surname.list
+-- df mnamen: word=ASSurnames.list
+-- df null=0.0001
 
 CREATE TABLE person (
-  key int PRIMARY KEY NOT NULL,
-  name varchar(255) NOT NULL,
-  geburtsdatum DATE
+  key int PRIMARY KEY NOT NULL, 
+  name varchar(255) NOT NULL, -- df: text=namen length=1
+  geburtsdatum DATE --df: start=1920-01-01 end=2010-01-01
 );
 
-CREATE TABLE segler (
-  key int PRIMARY KEY REFERENCES person
+CREATE TABLE segler ( 
+  key int PRIMARY KEY REFERENCES person 
 );
 
-CREATE TABLE trainer (
-  key int PRIMARY KEY REFERENCES person
+CREATE TABLE trainer ( 
+  key int PRIMARY KEY REFERENCES person 
 );
 
 CREATE TABLE boot (
   id int PRIMARY KEY,
-  name varchar(255) NOT NULL,
-  personen int NOT NULL,
-  tiefgang int NOT NULL
+  name varchar(255) NOT NULL, -- df: word=bootnamen length=1
+  personen int NOT NULL, -- df: size=50
+  tiefgang int NOT NULL -- df: size=200
 );
 
 CREATE TABLE tourenboot (
@@ -30,27 +34,27 @@ CREATE TABLE tourenboot (
 
 CREATE TABLE sportboot (
   id int PRIMARY KEY REFERENCES boot,
-  segelflaeche int NOT NULL
+  segelflaeche int NOT NULL -- df: size=150
 );
 
 CREATE TABLE mannschaft (
-  name varchar(255)  PRIMARY KEY NOT NULL,	
+  name varchar(255)  PRIMARY KEY NOT NULL, -- df: word=mnamen length=1
   key int  REFERENCES trainer(key),
-  aklasse int NOT NULL
+  aklasse int NOT NULL -- df: size=30
 );
 
 CREATE TABLE regatta (
-  name varchar(255) NOT NULL,
+  name varchar(255) NOT NULL, -- df: word=mnamen length=1
   jahr varchar(4) NOT NULL,
   land varchar(100) NOT NULL,
   PRIMARY KEY (name, jahr)
 );
 
 CREATE TABLE wettfahrt (
-  wname varchar(255),
+  wname varchar(255), --df: word=mnamen length=1
   wjahr varchar(4),
-  datum date NOT NULL,
-  laenge int NOT NULL,
+  datum date NOT NULL, -- df: start=1990-01-01 end=2015-03-01
+  laenge int NOT NULL, -- df: size=100000
   FOREIGN KEY (wname, wjahr) REFERENCES regatta(name, jahr),
   PRIMARY KEY (wname, wjahr, datum)
 );
