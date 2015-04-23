@@ -11,10 +11,9 @@ import org.postgresql.ds.PGPoolingDataSource;
 /**
  * Klasse für die JDBC Verbindung zu einem PostgreSQL Server
  * @author lukaszainzinger
- * @version 2015-03-19
+ * @version 2015-04-23
  */
 public class JDBC_Controller_PSQL {	
-	private String name;
 	private String server;
 	private String benutzer;
 	private String passwort;
@@ -39,7 +38,7 @@ public class JDBC_Controller_PSQL {
 	public void connect() throws SQLException {
 		ds = new PGPoolingDataSource();
 		ds.setServerName(server);
-		ds.setUser(name);
+		ds.setUser(benutzer);
 		ds.setPassword(passwort);
 		ds.setDatabaseName(datenbank);
 		

@@ -18,7 +18,7 @@ import javax.swing.JButton;
 /**
  * GUI für den Login
  * @author lukaszainzinger
- * @version 2015-03-18
+ * @version 2015-04-23
  */
 public class Login_GUI {
 
@@ -115,8 +115,7 @@ public class Login_GUI {
 				try {
 					con.connect();
 				} catch (SQLException e1) {
-					e1.printStackTrace();
-					error = 1;
+					System.err.print("Fehler beim Aufbau der Connection! Bitte nochmal versuchen!");
 				}
 				if(error==0){
 					frame.hide();
