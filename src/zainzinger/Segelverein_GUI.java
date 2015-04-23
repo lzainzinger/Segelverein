@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  * GUI für das Verwalten der Boote
  * @author lukaszainzinger
- * @version 2015-03-19
+ * @version 2015-04-23
  */
 public class Segelverein_GUI {
 
@@ -275,9 +275,12 @@ public class Segelverein_GUI {
 						try {
 							ResultSet rs = con.executeQuery("SELECT * FROM boot;");
 							tabelle = con.forJTable(rs, 4);
+							JTable neu = new JTable(tabelle, colnames);
 							rs.close();
 							//model.fireTableDataChanged();
-							boot_table.repaint();
+							anzeige_panel.remove(boot_table);
+							anzeige_panel.add(neu);
+							anzeige_panel.repaint();
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
